@@ -9,70 +9,155 @@ import SwiftUI
 
 struct HomeView: View {
     
-    ///  2. Definir variables
+    // MARK: Properties
+    
+    @State private var homeViewModel = HomeViewModel()
     @State private var showPortfolio = false
     
+    // MARK: - View
     var body: some View {
         ZStack {
-            /// Background layer
             Color.dcBackground
                 .ignoresSafeArea()
             
-            /// Content layer
             VStack {
                 homeHeader
-                /// homeHeader va al final primero se crea el HStack aquí
+//                List {
+//                    CoinRow(coin: MockData.coin, showHoldingsColumn: false)
+//                }
+                // 2 Una vez que se tenga el init el View Model cambiar a:
+                
+//                List {
+//                    ForEach(homeViewModel.allCoins) { coin in
+//                        CoinRow(coin: coin, showHoldingsColumn: false)
+//                    }
+//                }
+                
+                // 3 reemplazar por
+                
+//                if !showPortfolio {
+//                    List {
+//                        ForEach(homeViewModel.allCoins) { coin in
+//                            CoinRow(coin: coin, showHoldingsColumn: false)
+//                                .listRowInsets(.init(top: 12, leading: 0, bottom: 12, trailing: 12))
+//                        }
+//                    }
+//                    .listStyle(.plain)
+//                    .transition(.move(edge: .leading))
+//                }
+                
+                // 5
+//                HStack {
+//                    Text("Moneda")
+//                    Spacer()
+//                    Text("Inversión")
+//                    Text("Precio")
+//                        .frame(width: width / 3, alignment: .trailing)
+//                }
+//                .font(.caption)
+//                .foregroundStyle(.dcSecondaryText)
+//                .padding(.horizontal)
+                // 6 cambiar a
+                titles
+                
+                // 4 reemplazar lo anterior por
+                if !showPortfolio {
+                    allCoinsList
+                        .transition(.move(edge: .leading))
+                }
+                
+                if showPortfolio {
+                    portfolioCoinsList
+                        .transition(.move(edge: .trailing))
+                }
                 
                 Spacer(minLength: 0)
-            }
+            } // VStack
         } // ZStack
     }
 }
 
-#Preview {
+// MARK: - Preview
+#Preview("Light") {
     NavigationStack {
         HomeView()
             .toolbar(.hidden)
     }
 }
 
+#Preview("Dark") {
+    NavigationStack {
+        HomeView()
+            .preferredColorScheme(.dark)
+    }
+}
+
+// MARK: - Extensions
 extension HomeView {
     
+    // MARK: - Header (butttons)
     private var homeHeader: some View {
-            /// 1 Primero añadir los botones y el texto
             HStack {
-//                    CircleButton(iconName: "info")
-                /// 5 comentar la anterior y usar esto
                 CircleButton(iconName: showPortfolio ? "plus" : "info")
                     .animation(.none, value: showPortfolio)
-                /// 8
                     .background(
                         CircleButtonAnimation(animate: $showPortfolio)
                     )
-                /// 9 separar en extension todo el HStack
                 
                 Spacer()
                 
-//                    Text("Precios Actuales")
-                /// 6 comentar la anterior y usar y añadir animation al final
-                Text(showPortfolio ? "Portafolio" : "Precios Actuales")
+              Text(showPortfolio ? "Portafolio" : "Precios Actuales")
                     .fontWeight(.heavy)
                     .foregroundStyle(.accent)
                     .animation(.none, value: showPortfolio)
-                /// 7 crear CircleButtonAnimation
                 
                 Spacer()
                 
                 CircleButton(iconName: "chevron.right")
-                /// 4
                     .rotationEffect(Angle(degrees: showPortfolio ? 180 : 0))
-                /// 3
                     .onTapGesture {
                         withAnimation(.interactiveSpring()) {
                             showPortfolio.toggle()
                         }
                     }
-            }
+            } // HStack
             .padding(.horizontal)
+    }
+    
+    private var allCoinsList: some View {
+        List {
+            ForEach(homeViewModel.allCoins) { coin in
+                CoinRow(coin: coin, showHoldingsColumn: false)
+//                    .listRowInsets(.init(top: 12, leading: 0, bottom: 12, trailing: 12))
+                    .listRowSeparator(.hidden)
+            }
+        }
+        .listStyle(.plain)
+    }
+    
+    private var portfolioCoinsList: some View {
+        List {
+            ForEach(homeViewModel.portfolioCoins) { coin in
+                CoinRow(coin: coin, showHoldingsColumn: true)
+//                    .listRowInsets(.init(top: 12, leading: 0, bottom: 12, trailing: 12))
+                    .listRowSeparator(.hidden)
+            }
+        }
+        .listStyle(.plain)
+    }
+    
+    private var titles: some View {
+        HStack {
+            Text("Moneda")
+            Spacer()
+            if showPortfolio {
+                Text("Inversión")
+            }
+            Text("Precio")
+                .frame(width: width / 3, alignment: .trailing)
+        }
+        .font(.caption)
+        .foregroundStyle(.dcSecondaryText)
+        .padding(.horizontal)
     }
 }

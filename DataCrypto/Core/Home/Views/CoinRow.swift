@@ -112,6 +112,6 @@ extension CoinRow {
         // para centrar
 //            .frame(width: UIScreen.main.bounds.width / 3.5)
         // reemplazar por ya que sólo se usará en Portrait
-        .frame(width: width / 3.5)
+        .frame(width: width / 3, alignment: .trailing)
     }
 }
