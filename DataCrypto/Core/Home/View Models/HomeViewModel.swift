@@ -13,6 +13,9 @@ class HomeViewModel {
     
     var allCoins: [Coin] = []
     var portfolioCoins: [Coin] = []
+    var coinError: ErrorCases?
+    var showAlert = false
+    var isLoading = false
     
     init() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
@@ -20,4 +23,17 @@ class HomeViewModel {
             self.portfolioCoins.append(MockData.coin)
         }
     }
+    
+    func getAllCoins() async {
+        isLoading = true
+        do {
+            self.allCoins = try await CoinsWebService.getAllCoins()
+            self.isLoading = false
+        } catch(let error) {
+            coinError = ErrorCases.custom(error: error)
+            showAlert = true
+            isLoading = false
+        }
+    }
+    
 }

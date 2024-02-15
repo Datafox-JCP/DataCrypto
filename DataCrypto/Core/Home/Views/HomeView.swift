@@ -12,7 +12,7 @@ struct HomeView: View {
     // MARK: Properties
     
     @State private var homeViewModel = HomeViewModel()
-    @State private var showPortfolio = false
+    @State private var showPortfolio = true
     
     // MARK: - View
     var body: some View {
@@ -47,9 +47,24 @@ struct HomeView: View {
                         .transition(.move(edge: .trailing))
                 }
                 
-//                Spacer(minLength: 0)
+                if homeViewModel.isLoading {
+                    LoadingView()
+                }
             } // VStack
         } // ZStack
+        // primero crear el webservice
+        // crear ErrorCases
+        // crear función en ViewModel
+        .task {
+            await homeViewModel.getAllCoins()
+        }
+        // 2 después añadir la alerta
+        .alert(isPresented: $homeViewModel.showAlert) {
+            return Alert(
+                title: Text("Error"),
+                message: Text(homeViewModel.coinError?.errorDescription ?? "")
+            )
+        } // Alert
     }
 }
 
