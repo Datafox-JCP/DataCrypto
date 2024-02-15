@@ -22,45 +22,21 @@ struct HomeView: View {
             
             VStack {
                 homeHeader
-//                List {
-//                    CoinRow(coin: MockData.coin, showHoldingsColumn: false)
-//                }
-                // 2 Una vez que se tenga el init el View Model cambiar a:
                 
-//                List {
-//                    ForEach(homeViewModel.allCoins) { coin in
-//                        CoinRow(coin: coin, showHoldingsColumn: false)
-//                    }
-//                }
-                
-                // 3 reemplazar por
-                
-//                if !showPortfolio {
-//                    List {
-//                        ForEach(homeViewModel.allCoins) { coin in
-//                            CoinRow(coin: coin, showHoldingsColumn: false)
-//                                .listRowInsets(.init(top: 12, leading: 0, bottom: 12, trailing: 12))
-//                        }
-//                    }
-//                    .listStyle(.plain)
-//                    .transition(.move(edge: .leading))
-//                }
-                
-                // 5
-//                HStack {
-//                    Text("Moneda")
-//                    Spacer()
-//                    Text("Inversión")
-//                    Text("Precio")
-//                        .frame(width: width / 3, alignment: .trailing)
-//                }
-//                .font(.caption)
-//                .foregroundStyle(.dcSecondaryText)
-//                .padding(.horizontal)
-                // 6 cambiar a
+                VStack(alignment: .leading) {
+                    ScrollView(.horizontal) {
+                        HStack(spacing: 16) {
+                            ForEach(0..<5, id: \.self) { _ in
+                                TopCoinsView()
+                            }
+                        }
+                    }
+                    .padding(.horizontal)
+                }
+                .padding(.bottom, 16)
+
                 titles
                 
-                // 4 reemplazar lo anterior por
                 if !showPortfolio {
                     allCoinsList
                         .transition(.move(edge: .leading))
@@ -71,7 +47,7 @@ struct HomeView: View {
                         .transition(.move(edge: .trailing))
                 }
                 
-                Spacer(minLength: 0)
+//                Spacer(minLength: 0)
             } // VStack
         } // ZStack
     }
@@ -125,21 +101,20 @@ extension HomeView {
     }
     
     private var allCoinsList: some View {
-        List {
-            ForEach(homeViewModel.allCoins) { coin in
-                CoinRow(coin: coin, showHoldingsColumn: false)
-//                    .listRowInsets(.init(top: 12, leading: 0, bottom: 12, trailing: 12))
-                    .listRowSeparator(.hidden)
+        ScrollView {
+            LazyVStack {
+                ForEach(homeViewModel.allCoins) { coin in
+                    CoinRow(coin: coin, showHoldingsColumn: false)
+                        .padding(.horizontal)
+                }
             }
         }
-        .listStyle(.plain)
     }
     
     private var portfolioCoinsList: some View {
         List {
             ForEach(homeViewModel.portfolioCoins) { coin in
                 CoinRow(coin: coin, showHoldingsColumn: true)
-//                    .listRowInsets(.init(top: 12, leading: 0, bottom: 12, trailing: 12))
                     .listRowSeparator(.hidden)
             }
         }
@@ -158,6 +133,6 @@ extension HomeView {
         }
         .font(.caption)
         .foregroundStyle(.dcSecondaryText)
-        .padding(.horizontal)
+        .padding(.horizontal, 36)
     }
 }

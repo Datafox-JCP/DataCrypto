@@ -30,6 +30,11 @@ struct CoinRow: View {
             rightColumn
         } // HStack
         .font(.subheadline)
+        .padding(.all, 8)
+        .overlay {
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color(.systemGray4), lineWidth: 2)
+        }
     }
 }
 
@@ -56,7 +61,7 @@ extension CoinRow {
                 AsyncImage(url: URL(string: coin.image), transaction: Transaction(animation: .spring())) { phase in
                     switch phase {
                     case .empty:
-                        Color.purple.opacity(0.1)
+                        Color.orange.opacity(0.3)
                     case .success(let image):
                         image
                             .resizable()
@@ -69,12 +74,12 @@ extension CoinRow {
                         Image(systemName: "exclamationmark.icloud")
                     }
                 }
-                .frame(width: 45, height: 45)
+                .frame(width: 32, height: 32)
                     
                 
                 VStack(alignment: .leading) {
                     Text(coin.symbol.uppercased())
-                        .font(.title2)
+                        .font(.headline)
                         .padding(.leading, 8)
                         .foregroundStyle(.accent)
                     
@@ -112,6 +117,6 @@ extension CoinRow {
         // para centrar
 //            .frame(width: UIScreen.main.bounds.width / 3.5)
         // reemplazar por ya que sólo se usará en Portrait
-        .frame(width: width / 3, alignment: .trailing)
+        .frame(width: width / 3.5, alignment: .trailing)
     }
 }
