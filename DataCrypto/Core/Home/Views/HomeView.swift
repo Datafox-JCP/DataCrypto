@@ -22,19 +22,7 @@ struct HomeView: View {
             
             VStack {
                 homeHeader
-                
-                VStack(alignment: .leading) {
-                    ScrollView(.horizontal) {
-                        HStack(spacing: 16) {
-                            ForEach(0..<5, id: \.self) { _ in
-                                TopCoinsView()
-                            }
-                        }
-                    }
-                    .padding(.horizontal)
-                }
-                .padding(.bottom, 16)
-
+                topCoins
                 titles
                 
                 if !showPortfolio {
@@ -52,100 +40,111 @@ struct HomeView: View {
                 }
             } // VStack
         } // ZStack
-        // primero crear el webservice
-        // crear ErrorCases
-        // crear función en ViewModel
+        // 1 WebService - ErrorCases - ViewModel
+        // MARK: - Load coins
         .task {
             await homeViewModel.getAllCoins()
         }
-        // 2 después añadir la alerta
         .alert(isPresented: $homeViewModel.showAlert) {
             return Alert(
                 title: Text("Error"),
                 message: Text(homeViewModel.coinError?.errorDescription ?? "")
-            )
+            )  // 2 Add alert
         } // Alert
     }
 }
 
-// MARK: - Preview
+// MARK: - Previews
 #Preview("Light") {
-    NavigationStack {
-        HomeView()
-            .toolbar(.hidden)
-    }
+    HomeView()
 }
 
 #Preview("Dark") {
-    NavigationStack {
-        HomeView()
-            .preferredColorScheme(.dark)
-    }
+    HomeView()
+        .preferredColorScheme(.dark)
 }
 
-// MARK: - Extensions
+// MARK: - Extension
 extension HomeView {
     
     // MARK: - Header (butttons)
     private var homeHeader: some View {
-            HStack {
-                CircleButton(iconName: showPortfolio ? "plus" : "info")
-                    .animation(.none, value: showPortfolio)
-                    .background(
-                        CircleButtonAnimation(animate: $showPortfolio)
-                    )
-                
-                Spacer()
-                
-              Text(showPortfolio ? "Portafolio" : "Precios Actuales")
-                    .fontWeight(.heavy)
-                    .foregroundStyle(.accent)
-                    .animation(.none, value: showPortfolio)
-                
-                Spacer()
-                
-                CircleButton(iconName: "chevron.right")
-                    .rotationEffect(Angle(degrees: showPortfolio ? 180 : 0))
-                    .onTapGesture {
-                        withAnimation(.interactiveSpring()) {
-                            showPortfolio.toggle()
-                        }
+        HStack {
+            CircleButton(iconName: showPortfolio ? "plus" : "info")
+                .animation(.none, value: showPortfolio)
+                .background(
+                    CircleButtonAnimation(animate: $showPortfolio)
+                )
+            
+            Spacer()
+            
+          Text(showPortfolio ? "Holdings" : "Live Price")
+                .fontWeight(.heavy)
+                .foregroundStyle(.accent)
+                .animation(.none, value: showPortfolio)
+            
+            Spacer()
+            
+            CircleButton(iconName: "chevron.right")
+                .rotationEffect(Angle(degrees: showPortfolio ? 180 : 0))
+                .onTapGesture {
+                    withAnimation(.interactiveSpring()) {
+                        showPortfolio.toggle()
                     }
-            } // HStack
-            .padding(.horizontal)
+                }
+        } // HStack
+        .padding(.horizontal)
     }
     
+    // MARK: - Top coins
+    private var topCoins: some View {
+        VStack(alignment: .leading) {
+            ScrollView(.horizontal) {
+                HStack(spacing: 16) {
+                    ForEach(homeViewModel.topCoins) { coin in
+                        TopCoinsView(coin: coin )
+                    } // Loop
+                } // HStack
+            } // Scroll
+            .padding(.horizontal)
+        } // VStack
+        .padding(.bottom, 16)
+    }
+    
+    // MARK: - Coins list
     private var allCoinsList: some View {
         ScrollView {
             LazyVStack {
                 ForEach(homeViewModel.allCoins) { coin in
                     CoinRow(coin: coin, showHoldingsColumn: false)
                         .padding(.horizontal)
-                }
-            }
-        }
+                } // Loop
+            } // LAzyVStack
+        } // Scroll
     }
     
+    // MARK: - Portfolio list
     private var portfolioCoinsList: some View {
         List {
             ForEach(homeViewModel.portfolioCoins) { coin in
                 CoinRow(coin: coin, showHoldingsColumn: true)
                     .listRowSeparator(.hidden)
             }
-        }
+        } // List
         .listStyle(.plain)
     }
     
+    // MARK: - Titles
     private var titles: some View {
         HStack {
-            Text("Moneda")
+            Text("Coin")
             Spacer()
             if showPortfolio {
-                Text("Inversión")
+                Text("Holdings")
             }
-            Text("Precio")
+            Text("Price")
                 .frame(width: width / 3, alignment: .trailing)
-        }
+        } // HStack
         .font(.caption)
         .foregroundStyle(.dcSecondaryText)
         .padding(.horizontal, 36)

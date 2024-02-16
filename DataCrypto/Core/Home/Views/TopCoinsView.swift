@@ -8,28 +8,39 @@
 import SwiftUI
 
 struct TopCoinsView: View {
+    let coin: Coin
+    
     var body: some View {
         VStack(alignment: .leading) {
-            // Image
-            Image(systemName: "bitcoinsign.circle.fill")
-                .resizable()
-                .frame(width: 32, height: 32)
-                .foregroundColor(.orange)
-                .padding(.bottom, 8)
+            AsyncImage(url: URL(string: coin.image), transaction: Transaction(animation: .spring())) { phase in
+                switch phase {
+                case .empty:
+                    Color.orange.opacity(0.3)
+                case .success(let image):
+                    image
+                        .resizable()
+                        .scaledToFill()
+                case .failure(_):
+                    Image(systemName: "exclamationmark.icloud")
+                        .resizable()
+                        .scaledToFit()
+                @unknown default:
+                    Image(systemName: "exclamationmark.icloud")
+                }
+            }
+            .frame(width: 32, height: 32)
             
-//            // Coin info
             HStack(spacing: 2) {
-               Text("BTC")
+                Text(coin.name)
                     .font(.caption)
                     .bold()
                 
-                Text("$20,330,999.00")
+                Text(coin.currentPrice.asCurrencyWith2Decimals())
                     .font(.caption)
                     .foregroundStyle(.dcSecondaryText)
             }
-//            
-            // Coint percent change
-            Text("+ 5.6%")
+
+            Text(coin.priceChangePercentage24H?.asPercentString() ?? "-")
                 .foregroundStyle(.dcGreen)
         }
         .frame(width: 140, height: 140)
@@ -40,6 +51,11 @@ struct TopCoinsView: View {
     }
 }
 
-#Preview {
-    TopCoinsView()
+#Preview("Light") {
+    TopCoinsView(coin: MockData.coin)
+}
+
+#Preview("Dark") {
+    TopCoinsView(coin: MockData.coin)
+        .preferredColorScheme(.dark)
 }

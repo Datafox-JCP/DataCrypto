@@ -57,7 +57,7 @@ extension CoinRow {
     //            Circle()
     //                .frame(width: 45, height: 45)
     //            AsyncImage(url: URL(string: coin.image), scale: 6.0)
-                // primero sin scale y al final la siguiente primero sin transcation
+                // primero sin scale y al final la siguiente primero sin transaction
                 AsyncImage(url: URL(string: coin.image), transaction: Transaction(animation: .spring())) { phase in
                     switch phase {
                     case .empty:

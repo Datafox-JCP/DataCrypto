@@ -9,7 +9,7 @@ import Foundation
 
 final class CoinsWebService {
     
-    static func getAllCoins() async throws -> [Coin] {
+    static func fetchCoinData() async throws -> [Coin] {
         let urlString = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=true&price_change_percentage=24h"
         
         guard let url = URL(string: urlString) else {
@@ -24,7 +24,7 @@ final class CoinsWebService {
         
         do {
             let decoder = JSONDecoder()
-//            decoder.keyDecodingStrategy = .convertFromSnakeCase
+            decoder.keyDecodingStrategy = .convertFromSnakeCase
             return try decoder.decode([Coin].self, from: data)
         } catch {
             throw ErrorCases.invalidData

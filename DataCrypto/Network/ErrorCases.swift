@@ -15,11 +15,11 @@ enum ErrorCases: LocalizedError {
     
     var errorDescription: String? {
         switch self {
-        case .invalidUrl: return "URL no válida"
+        case .invalidUrl: return "Invalid URL"
             
-        case .invalidResponse: return "Respuesta no válida"
+        case .invalidResponse: return "The server has some problems. Please try gain in a few minutes."
             
-        case .invalidData: return "Datos inválidos"
+        case .invalidData: return "Invalid data"
             
         case .custom(let error):
             return error.localizedDescription
