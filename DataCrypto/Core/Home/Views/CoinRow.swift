@@ -8,19 +8,17 @@
 import SwiftUI
 
 struct CoinRow: View {
-    // 1
+    // MARK: Properties
     let coin: Coin
-    // 5
     let showHoldingsColumn: Bool
     
+    // MARK: View
     var body: some View {
-        // 3
         HStack(spacing: 0) {
             leftColumn
             
             Spacer()
             
-            // 6
             if showHoldingsColumn {
                 centerColumn
             } // Condition
@@ -38,30 +36,31 @@ struct CoinRow: View {
     }
 }
 
+// MARK: - Previews
 #Preview("Light",traits: .sizeThatFitsLayout) {
-    // 2 Crear MockData
     CoinRow(coin: MockData.coin, showHoldingsColumn: true)
 }
 
 #Preview("Dark",traits: .sizeThatFitsLayout) {
-    // 2 Crear MockData
     CoinRow(coin: MockData.coin, showHoldingsColumn: true)
         .preferredColorScheme(.dark)
 }
 
+// MARK: - Extensions
 extension CoinRow {
     
+    // MARK: - Left column
     private var leftColumn: some View {
         HStack(spacing: 0) {
-                // 4 Ya terminado el diseño poner la imagen
-    //            Circle()
-    //                .frame(width: 45, height: 45)
-    //            AsyncImage(url: URL(string: coin.image), scale: 6.0)
-                // primero sin scale y al final la siguiente primero sin transaction
-                AsyncImage(url: URL(string: coin.image), transaction: Transaction(animation: .spring())) { phase in
+            Text("\(coin.marketCapRank)")
+                .padding(.trailing, 8)
+                .font(.caption)
+                .foregroundStyle(.accent)
+
+            AsyncImage(url: URL(string: coin.image), transaction: Transaction(animation: .easeIn(duration: 1))) { phase in
                     switch phase {
                     case .empty:
-                        Color.orange.opacity(0.3)
+                        Color.clear
                     case .success(let image):
                         image
                             .resizable()
@@ -89,9 +88,10 @@ extension CoinRow {
                         .foregroundStyle(.dcSecondaryText)
                 } // VStack
                 .padding(.leading, 8)
-        }
+        } // HStack
     }
     
+    // MARK: - Center column
     private var centerColumn: some View {
         VStack(alignment: .trailing) {
             Text(coin.currentHoldingsValue.asCurrencyWith2Decimals())
@@ -104,6 +104,7 @@ extension CoinRow {
         } // VSTack
     }
     
+    // MARK: - Right column
     private var rightColumn: some View {
         VStack(alignment: .trailing) {
             Text(coin.currentPrice.asCurrencyWith6Decimals())
@@ -114,9 +115,6 @@ extension CoinRow {
                 .font(.caption)
                 .foregroundStyle((coin.priceChangePercentage24H ?? 0) >= 0 ? .dcGreen : .dcRed)
         } // VStack
-        // para centrar
-//            .frame(width: UIScreen.main.bounds.width / 3.5)
-        // reemplazar por ya que sólo se usará en Portrait
         .frame(width: width / 3.5, alignment: .trailing)
     }
 }

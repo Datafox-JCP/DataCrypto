@@ -13,7 +13,6 @@ struct HomeView: View {
     
     @State private var homeViewModel = HomeViewModel()
     @State private var showPortfolio = true
-    
     // MARK: - View
     var body: some View {
         ZStack {
@@ -98,29 +97,39 @@ extension HomeView {
     
     // MARK: - Top coins
     private var topCoins: some View {
-        VStack(alignment: .leading) {
-            ScrollView(.horizontal) {
-                HStack(spacing: 16) {
-                    ForEach(homeViewModel.topCoins) { coin in
-                        TopCoinsView(coin: coin )
-                    } // Loop
-                } // HStack
-            } // Scroll
-            .padding(.horizontal)
-        } // VStack
-        .padding(.bottom, 16)
+        VStack {
+            Text("Top 10")
+                .font(.caption)
+                .foregroundStyle(.dcSecondaryText)
+                .padding(.horizontal)
+            
+            VStack(alignment: .leading) {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 16) {
+                        ForEach(homeViewModel.topCoins) { coin in
+                            TopCoinsView(coin: coin )
+                        } // Loop
+                    } // HStack
+                } // Scroll
+                .padding(.horizontal)
+            } // VStack
+            .padding(.bottom, 16)
+        }
     }
     
     // MARK: - Coins list
     private var allCoinsList: some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             LazyVStack {
                 ForEach(homeViewModel.allCoins) { coin in
                     CoinRow(coin: coin, showHoldingsColumn: false)
                         .padding(.horizontal)
                 } // Loop
-            } // LAzyVStack
+            } // LazyVStack
         } // Scroll
+        .refreshable {
+            await homeViewModel.getAllCoins()
+        }
     }
     
     // MARK: - Portfolio list

@@ -78,6 +78,6 @@ class HomeViewModel {
         let topMovers = allCoins.sorted {
             $0.priceChangePercentage24H ?? 0 > $1.priceChangePercentage24H ?? 0
         }
-        topCoins = Array(topMovers.prefix(5))
+        topCoins = Array(topMovers.prefix(10))
     }
 }

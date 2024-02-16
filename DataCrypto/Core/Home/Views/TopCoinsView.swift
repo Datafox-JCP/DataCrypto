@@ -44,6 +44,7 @@ struct TopCoinsView: View {
                 .foregroundStyle(.dcGreen)
         }
         .frame(width: 140, height: 140)
+        .background(.blue.opacity(0.1))
         .overlay {
             RoundedRectangle(cornerRadius: 12)
                 .stroke(Color(.systemGray4), lineWidth: 2)
