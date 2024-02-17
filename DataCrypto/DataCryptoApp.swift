@@ -11,10 +11,7 @@ import SwiftUI
 struct DataCryptoApp: App {
     var body: some Scene {
         WindowGroup {
-            NavigationStack {
-                HomeView()
-                    .toolbar(.hidden)
-            }
+            HomeView()
         }
     }
 }

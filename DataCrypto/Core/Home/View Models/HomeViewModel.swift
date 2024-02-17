@@ -17,6 +17,7 @@ class HomeViewModel {
     var coinError: ErrorCases?
     var showAlert = false
     var isLoading = false
+    var searchText = ""
     
     init() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {

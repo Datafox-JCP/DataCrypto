@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct HomeView: View {
-    
     // MARK: Properties
     
     @State private var homeViewModel = HomeViewModel()
     @State private var showPortfolio = true
+    
     // MARK: - View
     var body: some View {
         ZStack {
@@ -23,6 +23,8 @@ struct HomeView: View {
                 homeHeader
                 topCoins
                 titles
+                
+                SearchBar(searchText: $homeViewModel.searchText)
                 
                 if !showPortfolio {
                     allCoinsList
@@ -42,7 +44,7 @@ struct HomeView: View {
         // 1 WebService - ErrorCases - ViewModel
         // MARK: - Load coins
         .task {
-            await homeViewModel.getAllCoins()
+//            await homeViewModel.getAllCoins()
         }
         .alert(isPresented: $homeViewModel.showAlert) {
             return Alert(
@@ -77,7 +79,7 @@ extension HomeView {
             
             Spacer()
             
-          Text(showPortfolio ? "Holdings" : "Live Price")
+          Text(showPortfolio ? "Holdings" : "Live Prices")
                 .fontWeight(.heavy)
                 .foregroundStyle(.accent)
                 .animation(.none, value: showPortfolio)
@@ -124,6 +126,7 @@ extension HomeView {
                 ForEach(homeViewModel.allCoins) { coin in
                     CoinRow(coin: coin, showHoldingsColumn: false)
                         .padding(.horizontal)
+                        .padding(.bottom, 12)
                 } // Loop
             } // LazyVStack
         } // Scroll
