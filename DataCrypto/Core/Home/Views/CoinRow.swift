@@ -57,7 +57,26 @@ extension CoinRow {
                 .font(.caption)
                 .foregroundStyle(.accent)
 
-            CachedImage(url: coin.image)
+            CachedImage(
+                url: coin.image,
+                animation: .easeIn(duration: 0.5),
+                transition: .scale.combined(with: .opacity)
+            ) { phase in
+                switch phase {
+                case .empty:
+                    ProgressView()
+                case .success(let image):
+                    image
+                        .resizable()
+                        .scaledToFill()
+                case .failure(_):
+                    Image(systemName: "xmark")
+                        .symbolVariant(.circle.fill)
+                @unknown default:
+                    EmptyView()
+                }
+            }
+            .frame(width: 32, height: 32)
 //            AsyncImage(url: URL(string: coin.image), transaction: Transaction(animation: .easeIn(duration: 1))) { phase in
 //                    switch phase {
 //                    case .empty:

@@ -12,23 +12,43 @@ struct TopCoinsView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            AsyncImage(url: URL(string: coin.image), transaction: Transaction(animation: .spring())) { phase in
+            CachedImage(
+                url: coin.image,
+                animation: .spring(duration: 0.5),
+                transition: .scale.combined(with: .opacity)
+            ) { phase in
                 switch phase {
                 case .empty:
-                    Color.orange.opacity(0.3)
+                    ProgressView()
                 case .success(let image):
                     image
                         .resizable()
                         .scaledToFill()
                 case .failure(_):
-                    Image(systemName: "exclamationmark.icloud")
-                        .resizable()
-                        .scaledToFit()
+                    Image(systemName: "xmark")
+                        .symbolVariant(.circle.fill)
                 @unknown default:
-                    Image(systemName: "exclamationmark.icloud")
+                    EmptyView()
                 }
             }
-            .frame(width: 32, height: 32)
+            .frame(width: 36, height: 36)
+//            AsyncImage(url: URL(string: coin.image), transaction: Transaction(animation: .spring())) { phase in
+//                switch phase {
+//                case .empty:
+//                    Color.orange.opacity(0.3)
+//                case .success(let image):
+//                    image
+//                        .resizable()
+//                        .scaledToFill()
+//                case .failure(_):
+//                    Image(systemName: "exclamationmark.icloud")
+//                        .resizable()
+//                        .scaledToFit()
+//                @unknown default:
+//                    Image(systemName: "exclamationmark.icloud")
+//                }
+//            }
+//            .frame(width: 32, height: 32)
             
             HStack(spacing: 2) {
                 Text(coin.name)

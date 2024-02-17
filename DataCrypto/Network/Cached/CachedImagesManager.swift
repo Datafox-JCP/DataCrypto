@@ -7,34 +7,70 @@
 
 import Foundation
 
-@Observable
-final class CachedImagesManager {
+
+final class CachedImagesManager: ObservableObject {
     
-    private(set) var data: Data?
+    @Published private(set) var currentState: CurrentState?
     
     private let imageRetriver = ImageRetriver()
     
     @MainActor
-//    func load(_ imageUrl: String) async { // 1
     func load(_ imageUrl: String,
               cache: ImageCache = .shared) async {
         
-        // 2 Fetch the image from cache if name exists
+        self.currentState = .loading
+        
         if let imageData = cache.object(forKey: imageUrl as NSString) {
-            self.data = imageData
+            self.currentState = .success(data: imageData)
+            #if DEBUG
             print("🌇 Fetching image from cache: \(imageUrl)")
+            #endif
             return
         }
         
         do {
-            self.data = try await imageRetriver.fetch(imageUrl)
-            // 1 Fetch the image and saving on cache
-            if let dataToCache = data as? NSData {
-                cache.set(object: dataToCache, forkey: imageUrl as NSString)
-                print("📲 Caching image: \(imageUrl)")
-            }
+            let data = try await imageRetriver.fetch(imageUrl)
+            
+            self.currentState = .success(data: data)
+            cache.set(
+                object: data as NSData,
+                forkey: imageUrl as NSString
+            )
+            #if DEBUG
+            print("📲 Caching image: \(imageUrl)")
+            #endif
         } catch {
+            self.currentState = .failed(error: error)
+            #if DEBUG
             print("😖 There was an error fetching the image: \(error.localizedDescription)")
+            #endif
         }
     }
+}
+
+// MARK: - Extension
+extension CachedImagesManager {
+    enum CurrentState {
+        case loading
+        case failed(error: Error)
+        case success(data: Data)
+    }
+}
+
+// Para animación
+extension CachedImagesManager.CurrentState: Equatable {
+    static func == (
+        lhs: CachedImagesManager.CurrentState,
+        rhs: CachedImagesManager.CurrentState) -> Bool {
+            switch (lhs, rhs) {
+            case (.loading, .loading):
+                return true
+            case (let .failed(lhsError), let .failed(rhsError)):
+                return lhsError.localizedDescription == rhsError.localizedDescription
+            case (let .success(lhsData), let .success(rhsData)):
+                return lhsData == rhsData
+            default:
+                return false
+            }
+        }
 }
