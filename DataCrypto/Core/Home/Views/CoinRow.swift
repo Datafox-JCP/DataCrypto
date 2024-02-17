@@ -57,23 +57,24 @@ extension CoinRow {
                 .font(.caption)
                 .foregroundStyle(.accent)
 
-            AsyncImage(url: URL(string: coin.image), transaction: Transaction(animation: .easeIn(duration: 1))) { phase in
-                    switch phase {
-                    case .empty:
-                        Color.clear
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .scaledToFill()
-                    case .failure(_):
-                        Image(systemName: "exclamationmark.icloud")
-                            .resizable()
-                            .scaledToFit()
-                    @unknown default:
-                        Image(systemName: "exclamationmark.icloud")
-                    }
-                }
-                .frame(width: 32, height: 32)
+            CachedImage(url: coin.image)
+//            AsyncImage(url: URL(string: coin.image), transaction: Transaction(animation: .easeIn(duration: 1))) { phase in
+//                    switch phase {
+//                    case .empty:
+//                        Color.clear
+//                    case .success(let image):
+//                        image
+//                            .resizable()
+//                            .scaledToFill()
+//                    case .failure(_):
+//                        Image(systemName: "exclamationmark.icloud")
+//                            .resizable()
+//                            .scaledToFit()
+//                    @unknown default:
+//                        Image(systemName: "exclamationmark.icloud")
+//                    }
+//                }
+//                .frame(width: 32, height: 32)
                     
                 
                 VStack(alignment: .leading) {
