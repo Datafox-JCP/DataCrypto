@@ -11,46 +11,63 @@ struct HomeView: View {
     // MARK: Properties
     
     @State private var homeViewModel = HomeViewModel()
-    @State private var showPortfolio = true
+    @State private var query = ""
     
     // MARK: - View
     var body: some View {
-        ZStack {
-            Color.dcBackground
-                .ignoresSafeArea()
-            
-            VStack {
-                homeHeader
-                topCoins
-                titles
+        NavigationStack {
+            ZStack {
+                Color.dcBackground
+                    .ignoresSafeArea()
                 
-                SearchBar(searchText: $homeViewModel.searchText)
-                
-                if !showPortfolio {
-                    allCoinsList
-                        .transition(.move(edge: .leading))
+                VStack {
+                    topCoins
+                    titles
+                    coinsList
+                } // VStack
+            } // ZStack
+            .navigationTitle("Live Prices")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button(action: {}) {
+                        Image(systemName: "gear")
+                            .padding(.horizontal)
+                    }
                 }
                 
-                if showPortfolio {
-                    portfolioCoinsList
-                        .transition(.move(edge: .trailing))
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(action: {}) {
+                        Image(systemName: "bitcoinsign")
+                            .symbolVariant(.circle)
+                            .padding(.horizontal)
+                    }
                 }
-                
-                if homeViewModel.isLoading {
-                    LoadingView()
-                }
-            } // VStack
-        } // ZStack
-        // 1 WebService - ErrorCases - ViewModel
+            }
+            .searchable(
+                text: $query,
+                prompt: "Search by coin name or symbol"
+            )
+            .onChange(of: query) {
+                homeViewModel.search(with: query)
+            } // Execute filter
+            .overlay {
+                if !homeViewModel.isLoading {
+                    if homeViewModel.filterCoins.isEmpty {
+                        ContentUnavailableView.search
+                    } // Content unavailable
+                } // Condition to show only if not is loading
+            } // Overlay
+        } // Nav
         // MARK: - Load coins
         .task {
-//            await homeViewModel.getAllCoins()
-        }
+            await homeViewModel.getAllCoins()
+        } // Load data
         .alert(isPresented: $homeViewModel.showAlert) {
             return Alert(
                 title: Text("Error"),
                 message: Text(homeViewModel.coinError?.errorDescription ?? "")
-            )  // 2 Add alert
+            )
         } // Alert
     }
 }
@@ -68,35 +85,6 @@ struct HomeView: View {
 // MARK: - Extension
 extension HomeView {
     
-    // MARK: - Header (butttons)
-    private var homeHeader: some View {
-        HStack {
-            CircleButton(iconName: showPortfolio ? "plus" : "info")
-                .animation(.none, value: showPortfolio)
-                .background(
-                    CircleButtonAnimation(animate: $showPortfolio)
-                )
-            
-            Spacer()
-            
-          Text(showPortfolio ? "Holdings" : "Live Prices")
-                .fontWeight(.heavy)
-                .foregroundStyle(.accent)
-                .animation(.none, value: showPortfolio)
-            
-            Spacer()
-            
-            CircleButton(iconName: "chevron.right")
-                .rotationEffect(Angle(degrees: showPortfolio ? 180 : 0))
-                .onTapGesture {
-                    withAnimation(.interactiveSpring()) {
-                        showPortfolio.toggle()
-                    }
-                }
-        } // HStack
-        .padding(.horizontal)
-    }
-    
     // MARK: - Top coins
     private var topCoins: some View {
         VStack {
@@ -109,7 +97,7 @@ extension HomeView {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 16) {
                         ForEach(homeViewModel.topCoins) { coin in
-                            TopCoinsView(coin: coin )
+                            TopCoinsRow(coin: coin )
                         } // Loop
                     } // HStack
                 } // Scroll
@@ -120,10 +108,10 @@ extension HomeView {
     }
     
     // MARK: - Coins list
-    private var allCoinsList: some View {
+    private var coinsList: some View {
         ScrollView(showsIndicators: false) {
             LazyVStack {
-                ForEach(homeViewModel.allCoins) { coin in
+                ForEach(homeViewModel.filterCoins) { coin in
                     CoinRow(coin: coin, showHoldingsColumn: false)
                         .padding(.horizontal)
                         .padding(.bottom, 12)
@@ -135,25 +123,11 @@ extension HomeView {
         }
     }
     
-    // MARK: - Portfolio list
-    private var portfolioCoinsList: some View {
-        List {
-            ForEach(homeViewModel.portfolioCoins) { coin in
-                CoinRow(coin: coin, showHoldingsColumn: true)
-                    .listRowSeparator(.hidden)
-            }
-        } // List
-        .listStyle(.plain)
-    }
-    
     // MARK: - Titles
     private var titles: some View {
         HStack {
             Text("Coin")
             Spacer()
-            if showPortfolio {
-                Text("Holdings")
-            }
             Text("Price")
                 .frame(width: width / 3, alignment: .trailing)
         } // HStack

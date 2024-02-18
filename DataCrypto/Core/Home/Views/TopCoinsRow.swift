@@ -1,5 +1,5 @@
 //
-//  TopCoinsView.swift
+//  TopCoinsRow.swift
 //  DataCrypto
 //
 //  Created by Juan Hernandez Pazos on 14/02/24.
@@ -7,9 +7,11 @@
 
 import SwiftUI
 
-struct TopCoinsView: View {
+struct TopCoinsRow: View {
+    // MARK: Properties
     let coin: Coin
     
+    // MARK: View
     var body: some View {
         VStack(alignment: .leading) {
             CachedImage(
@@ -31,26 +33,9 @@ struct TopCoinsView: View {
                     EmptyView()
                 }
             }
-            .frame(width: 36, height: 36)
-//            AsyncImage(url: URL(string: coin.image), transaction: Transaction(animation: .spring())) { phase in
-//                switch phase {
-//                case .empty:
-//                    Color.orange.opacity(0.3)
-//                case .success(let image):
-//                    image
-//                        .resizable()
-//                        .scaledToFill()
-//                case .failure(_):
-//                    Image(systemName: "exclamationmark.icloud")
-//                        .resizable()
-//                        .scaledToFit()
-//                @unknown default:
-//                    Image(systemName: "exclamationmark.icloud")
-//                }
-//            }
-//            .frame(width: 32, height: 32)
+            .frame(width: 32, height: 32)
             
-            HStack(spacing: 2) {
+            HStack(spacing: 4) {
                 Text(coin.name)
                     .font(.caption)
                     .bold()
@@ -58,25 +43,26 @@ struct TopCoinsView: View {
                 Text(coin.currentPrice.asCurrencyWith2Decimals())
                     .font(.caption)
                     .foregroundStyle(.dcSecondaryText)
-            }
+            } // HStack
 
             Text(coin.priceChangePercentage24H?.asPercentString() ?? "-")
+                .font(.callout)
                 .foregroundStyle(.dcGreen)
-        }
-        .frame(width: 140, height: 140)
-        .background(.blue.opacity(0.1))
+        } // VStack
+        .frame(width: 110, height: 110)
         .overlay {
             RoundedRectangle(cornerRadius: 12)
                 .stroke(Color(.systemGray4), lineWidth: 2)
-        }
+        } // Overlay
     }
 }
 
+// MARK: - Previews
 #Preview("Light") {
-    TopCoinsView(coin: MockData.coin)
+    TopCoinsRow(coin: MockData.coin)
 }
 
 #Preview("Dark") {
-    TopCoinsView(coin: MockData.coin)
+    TopCoinsRow(coin: MockData.coin)
         .preferredColorScheme(.dark)
 }

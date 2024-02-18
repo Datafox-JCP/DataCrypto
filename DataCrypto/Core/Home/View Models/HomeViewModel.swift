@@ -12,20 +12,48 @@ import Observation
 class HomeViewModel {
     
     var allCoins: [Coin] = []
+    var filterCoins: [Coin] = []
     var topCoins: [Coin] = []
-    var portfolioCoins: [Coin] = []
     var coinError: ErrorCases?
     var showAlert = false
     var isLoading = false
-    var searchText = ""
     
     init() {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             self.allCoins.append(MockData.coin)
-            self.portfolioCoins.append(MockData.coin)
         }
 //        getData()
     }
+    
+    func getAllCoins() async {
+        isLoading = true
+        do {
+            self.allCoins = try await CoinsWebService.fetchCoinData()
+            self.filterCoins = self.allCoins
+            self.getTopCoins()
+            self.isLoading = false
+        } catch(let error) {
+            coinError = ErrorCases.custom(error: error)
+            showAlert = true
+            isLoading = false
+        }
+    }
+    
+    func getTopCoins() {
+        let topMovers = allCoins.sorted {
+            $0.priceChangePercentage24H ?? 0 > $1.priceChangePercentage24H ?? 0
+        }
+        topCoins = Array(topMovers.prefix(10))
+    }
+    
+    func search(with query: String) {
+        let searchText = query.lowercased()
+        filterCoins = query.isEmpty ? allCoins : allCoins.filter {
+            $0.name.lowercased().contains(searchText)
+            || $0.symbol.lowercased().contains(searchText)
+        }
+    }
+    
     
     func getData() {
         let urlString = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=true&price_change_percentage=24h"
@@ -60,25 +88,5 @@ class HomeViewModel {
             }
         }
         .resume()
-    }
-    
-    func getAllCoins() async {
-        isLoading = true
-        do {
-            self.allCoins = try await CoinsWebService.fetchCoinData()
-            self.getTopCoins()
-            self.isLoading = false
-        } catch(let error) {
-            coinError = ErrorCases.custom(error: error)
-            showAlert = true
-            isLoading = false
-        }
-    }
-    
-    func getTopCoins() {
-        let topMovers = allCoins.sorted {
-            $0.priceChangePercentage24H ?? 0 > $1.priceChangePercentage24H ?? 0
-        }
-        topCoins = Array(topMovers.prefix(10))
     }
 }
