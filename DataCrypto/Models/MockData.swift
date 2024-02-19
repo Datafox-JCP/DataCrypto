@@ -208,5 +208,20 @@ struct MockData {
         priceChangePercentage24HInCurrency: 3952.64,
         currentHoldings: 1.5)
     
-    static let coins = [coin, coin, coin, coin, coin, coin, coin]
+    static let stat1 = Statistic(
+        title: "Market Cap",
+        value: "$12.58n",
+        percentageChange: 23.34
+    )
+    
+    static let stat2 = Statistic(
+        title: "Total Volume",
+        value: "$1.23Tr"
+    )
+    
+    static let stat3 = Statistic(
+        title: "Portafolio Value",
+        value: "$50.4K",
+        percentageChange: -15.32
+    )
 }

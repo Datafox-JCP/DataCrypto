@@ -12,6 +12,7 @@ struct HomeView: View {
     
     @State private var homeViewModel = HomeViewModel()
     @State private var query = ""
+    @State private var showPortfolio: Bool = false
     
     // MARK: - View
     var body: some View {
@@ -21,12 +22,14 @@ struct HomeView: View {
                     .ignoresSafeArea()
                 
                 VStack {
+                    HomeStats()
+                        .padding(.bottom, 6)
                     topCoins
                     titles
                     coinsList
                 } // VStack
             } // ZStack
-            .navigationTitle("Live Prices")
+            .navigationTitle("Precios Cripto")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
@@ -46,7 +49,7 @@ struct HomeView: View {
             }
             .searchable(
                 text: $query,
-                prompt: "Search by coin name or symbol"
+                prompt: "Buscar por moneda o símbolo"
             )
             .onChange(of: query) {
                 homeViewModel.search(with: query)
@@ -126,9 +129,9 @@ extension HomeView {
     // MARK: - Titles
     private var titles: some View {
         HStack {
-            Text("Coin")
+            Text("Moneda")
             Spacer()
-            Text("Price")
+            Text("Precio")
                 .frame(width: width / 3, alignment: .trailing)
         } // HStack
         .font(.caption)
