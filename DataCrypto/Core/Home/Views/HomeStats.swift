@@ -16,6 +16,8 @@ struct HomeStats: View {
         VStack {
             Text("Estadísticas")
                 .font(.caption)
+                .foregroundStyle(.dcSecondaryText)
+            
             HStack {
                 ForEach(homeViewModel.statistics) { stat in
                     StatisticRow(stat: stat)

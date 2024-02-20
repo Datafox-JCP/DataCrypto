@@ -12,7 +12,6 @@ struct HomeView: View {
     
     @State private var homeViewModel = HomeViewModel()
     @State private var query = ""
-    @State private var showPortfolio: Bool = false
     
     // MARK: - View
     var body: some View {
@@ -130,12 +129,31 @@ extension HomeView {
     private var titles: some View {
         HStack {
             Text("Moneda")
+            
             Spacer()
+            
             Text("Precio")
                 .frame(width: width / 3, alignment: .trailing)
+            
+            Button {
+                withAnimation(.linear(duration: 2.0)) {
+                    refreshData()
+                    HapticManager.notification(type: .success)
+                }
+            } label: {
+                Image(systemName: "goforward")
+            }
+            .rotationEffect(Angle(degrees: homeViewModel.isLoading ? 360 : 0), anchor: .center)
         } // HStack
         .font(.caption)
         .foregroundStyle(.dcSecondaryText)
         .padding(.horizontal, 36)
+    }
+    
+    // MARK: Refresh function
+    func refreshData() {
+        Task {
+            await homeViewModel.getAllCoins()
+        }
     }
 }
