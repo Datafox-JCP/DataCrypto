@@ -128,12 +128,36 @@ extension HomeView {
     // MARK: - Titles
     private var titles: some View {
         HStack {
-            Text("Moneda")
+            HStack(spacing: 4) {
+                Text("Moneda")
+                
+                Image(systemName: "chevron.down")
+                    .opacity((homeViewModel.sortOption == .rank || homeViewModel.sortOption == .rankReversed) ? 1.0 : 0.0)
+                    .rotationEffect(Angle(degrees: homeViewModel.sortOption == .rank ? 0 : 180))
+            } // HStack
+            .onTapGesture {
+                homeViewModel.sortOption = homeViewModel.sortOption == .rank ? .rankReversed : .rank
+            }
             
             Spacer()
             
-            Text("Precio")
-                .frame(width: width / 3, alignment: .trailing)
+            HStack(spacing: 4) {
+                Text("Precio")
+                
+                Image(systemName: "chevron.down")
+                    .opacity((homeViewModel.sortOption == .price || homeViewModel.sortOption == .priceReverse) ? 1.0 : 0.0)
+                    .rotationEffect(Angle(degrees: homeViewModel.sortOption == .price ? 0 : 180))
+            } // HStack
+            .frame(width: width / 3, alignment: .trailing)
+            .onTapGesture {
+                withAnimation(.default) {
+                    homeViewModel.sortOption = homeViewModel.sortOption == .price ? .priceReverse : .price
+                    // esto es actualizando llamando al servidor
+//                    Task {
+//                        await homeViewModel.getAllCoins()
+//                    }
+                }
+            }
             
             Button {
                 withAnimation(.linear(duration: 2.0)) {
@@ -156,4 +180,11 @@ extension HomeView {
             await homeViewModel.getAllCoins()
         }
     }
+    
+    // MARK: Sort function
+    private func onTapSortButton(sortOption: SortOption) {
+            homeViewModel.sortOption = sortOption
+            homeViewModel.sortCoins(sort: sortOption)
+        }
+
 }

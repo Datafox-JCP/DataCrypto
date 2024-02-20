@@ -19,6 +19,7 @@ class HomeViewModel {
     var coinError: ErrorCases?
     var showAlert = false
     var isLoading = false
+    var sortOption = SortOption.rank // para ordenamiento
     
 //    let statistics: [Statistic] = [
 //        Statistic(title: "Title", value: "Value", percentageChange: 1),
@@ -27,9 +28,9 @@ class HomeViewModel {
 //    ]
     
     init() {
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-//            self.allCoins.append(MockData.coin)
-//        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            self.allCoins.append(MockData.coin)
+        }
 //        getData()
     }
     
@@ -72,6 +73,22 @@ class HomeViewModel {
         filterCoins = query.isEmpty ? allCoins : allCoins.filter {
             $0.name.lowercased().contains(searchText)
             || $0.symbol.lowercased().contains(searchText)
+        }
+    }
+    
+    func sortCoins(sort: SortOption) {
+        switch sort {
+        case .rank:
+            filterCoins.sort(by: { $0.marketCapRank < $1.marketCapRank })
+//            return coins.sorted { coin1, coin2 in
+//                return coin1.marketCapRank < coin2.marketCapRank
+//            }
+        case .rankReversed:
+            filterCoins.sort(by: { $0.marketCapRank > $1.marketCapRank })
+        case .price:
+            filterCoins.sort(by: { $0.currentPrice < $1.currentPrice })
+        case .priceReverse:
+            filterCoins.sort(by: { $0.currentPrice > $1.currentPrice })
         }
     }
     
@@ -130,45 +147,3 @@ class HomeViewModel {
         .resume()
     }
 }
-
-//private func mapGlobalMarketData(marketData: MarketData?) -> [Statistic] {
-//    var stats: [Statistic] = []
-//
-//    guard let data = marketData else {
-//        return stats
-//    }
-//    
-//    let marketCap = Statistic(title: "Cap. Mercado", value: data.marketCap, percentageChange: data.marketCapChangePercentage24HUsd)
-//    let volume = Statistic(title: "Volumen 24h", value: data.volume)
-//    let btcDominance = Statistic(title: "Dominio BTC", value: data.btcDominance)
-//    
-//        let portfolioValue =
-//            portfolioCoins
-//                .map({ $0.currentHoldingsValue })
-//                .reduce(0, +)
-//
-//        let previousValue =
-//            portfolioCoins
-//                .map { (coin) -> Double in
-//                    let currentValue = coin.currentHoldingsValue
-//                    let percentChange = coin.priceChangePercentage24H ?? 0 / 100
-//                    let previousValue = currentValue / (1 + percentChange)
-//                    return previousValue
-//                }
-//                .reduce(0, +)
-//
-//        let percentageChange = ((portfolioValue - previousValue) / previousValue)
-//
-//        let portfolio = Statistic(
-//            title: "Portfolio Value",
-//            value: portfolioValue.asCurrencyWith2Decimals(),
-//            percentageChange: percentageChange)
-//    
-//    stats.append(contentsOf: [
-//        marketCap,
-//        volume,
-//        btcDominance,
-//            portfolio
-//    ])
-//    return stats
-//}

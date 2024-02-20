@@ -32,6 +32,7 @@
 		C6D1C25D2B8023C100B67358 /* ImageRetreiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6D1C25C2B8023C100B67358 /* ImageRetreiver.swift */; };
 		C6D1C2602B80252900B67358 /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6D1C25F2B80252900B67358 /* ImageCache.swift */; };
 		C6D1C2622B80278B00B67358 /* CachedImagesManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6D1C2612B80278B00B67358 /* CachedImagesManager.swift */; };
+		C6DA326B2B85534900939EDC /* SortOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6DA326A2B85534900939EDC /* SortOptions.swift */; };
 		C6ED59592B80E82D00747222 /* CachedImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6ED59582B80E82D00747222 /* CachedImage.swift */; };
 		C6F0054D2B7CF0390068422D /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6F0054C2B7CF0390068422D /* HomeViewModel.swift */; };
 /* End PBXBuildFile section */
@@ -63,6 +64,7 @@
 		C6D1C25C2B8023C100B67358 /* ImageRetreiver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageRetreiver.swift; sourceTree = "<group>"; };
 		C6D1C25F2B80252900B67358 /* ImageCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		C6D1C2612B80278B00B67358 /* CachedImagesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedImagesManager.swift; sourceTree = "<group>"; };
+		C6DA326A2B85534900939EDC /* SortOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortOptions.swift; sourceTree = "<group>"; };
 		C6ED59582B80E82D00747222 /* CachedImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedImage.swift; sourceTree = "<group>"; };
 		C6F0054C2B7CF0390068422D /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -142,6 +144,7 @@
 				C62A97C12B82CA0A001D340A /* Statistic.swift */,
 				C695765B2B8385730092B6AF /* MarketData.swift */,
 				C69F661A2B7BFF8E00B45FB6 /* MockData.swift */,
+				C6DA326A2B85534900939EDC /* SortOptions.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -302,6 +305,7 @@
 				C6A9A2F92B7E517000A3226C /* CoinsWebService.swift in Sources */,
 				C62A97C62B82D523001D340A /* HomeStats.swift in Sources */,
 				C6C6C42B2B77BEA20024FF54 /* Color+Extension.swift in Sources */,
+				C6DA326B2B85534900939EDC /* SortOptions.swift in Sources */,
 				C62A97C22B82CA0A001D340A /* Statistic.swift in Sources */,
 				C6D1C2622B80278B00B67358 /* CachedImagesManager.swift in Sources */,
 				C64B7EE62B7982DC007BE551 /* CircleButtonAnimation.swift in Sources */,
