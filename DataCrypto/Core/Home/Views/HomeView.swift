@@ -12,6 +12,8 @@ struct HomeView: View {
     
     @State private var homeViewModel = HomeViewModel()
     @State private var query = ""
+    @State private var selectedCoin: Coin? = nil
+    @State private var showDetailView = false
     
     // MARK: - View
     var body: some View {
@@ -65,11 +67,8 @@ struct HomeView: View {
         .task {
             await homeViewModel.getAllCoins()
         } // Load data
-        .alert(isPresented: $homeViewModel.showAlert) {
-            return Alert(
-                title: Text("Error"),
-                message: Text(homeViewModel.coinError?.errorDescription ?? "")
-            )
+        .alert(homeViewModel.coinError?.errorDescription ?? "", isPresented: $homeViewModel.showAlert) {
+            Button("Aceptar", role: .cancel) {}
         } // Alert
     }
 }
@@ -114,9 +113,13 @@ extension HomeView {
         ScrollView(showsIndicators: false) {
             LazyVStack {
                 ForEach(homeViewModel.filterCoins) { coin in
-                    CoinRow(coin: coin, showHoldingsColumn: false)
-                        .padding(.horizontal)
-                        .padding(.bottom, 12)
+                    NavigationLink {
+                        DetailView(coin: coin)
+                    } label: {
+                        CoinRow(coin: coin, showHoldingsColumn: false)
+                            .padding(.horizontal)
+                            .padding(.bottom, 12)
+                    } // NavLink
                 } // Loop
             } // LazyVStack
         } // Scroll
@@ -157,7 +160,7 @@ extension HomeView {
 //                        await homeViewModel.getAllCoins()
 //                    }
                 }
-            }
+            } // Sort button
             
             Button {
                 withAnimation(.linear(duration: 2.0)) {
@@ -166,7 +169,7 @@ extension HomeView {
                 }
             } label: {
                 Image(systemName: "goforward")
-            }
+            } // Refresh button
             .rotationEffect(Angle(degrees: homeViewModel.isLoading ? 360 : 0), anchor: .center)
         } // HStack
         .font(.caption)
@@ -183,8 +186,7 @@ extension HomeView {
     
     // MARK: Sort function
     private func onTapSortButton(sortOption: SortOption) {
-            homeViewModel.sortOption = sortOption
-            homeViewModel.sortCoins(sort: sortOption)
-        }
-
+        homeViewModel.sortOption = sortOption
+        homeViewModel.sortCoins(sort: sortOption)
+    }
 }

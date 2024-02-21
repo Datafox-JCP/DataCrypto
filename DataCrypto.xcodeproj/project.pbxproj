@@ -15,6 +15,7 @@
 		C64B7EDF2B795CA8007BE551 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64B7EDE2B795CA8007BE551 /* HomeView.swift */; };
 		C64B7EE42B795DFF007BE551 /* CircleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64B7EE32B795DFF007BE551 /* CircleButton.swift */; };
 		C64B7EE62B7982DC007BE551 /* CircleButtonAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64B7EE52B7982DC007BE551 /* CircleButtonAnimation.swift */; };
+		C691DA4B2B8633A20079867A /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C691DA4A2B8633A20079867A /* DetailView.swift */; };
 		C695765C2B8385730092B6AF /* MarketData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C695765B2B8385730092B6AF /* MarketData.swift */; };
 		C69F66192B7BF34600B45FB6 /* Coin.swift in Sources */ = {isa = PBXBuildFile; fileRef = C69F66182B7BF34600B45FB6 /* Coin.swift */; };
 		C69F661B2B7BFF8E00B45FB6 /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C69F661A2B7BFF8E00B45FB6 /* MockData.swift */; };
@@ -46,6 +47,7 @@
 		C64B7EDE2B795CA8007BE551 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		C64B7EE32B795DFF007BE551 /* CircleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleButton.swift; sourceTree = "<group>"; };
 		C64B7EE52B7982DC007BE551 /* CircleButtonAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleButtonAnimation.swift; sourceTree = "<group>"; };
+		C691DA4A2B8633A20079867A /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 		C695765B2B8385730092B6AF /* MarketData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarketData.swift; sourceTree = "<group>"; };
 		C69F66182B7BF34600B45FB6 /* Coin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coin.swift; sourceTree = "<group>"; };
 		C69F661A2B7BFF8E00B45FB6 /* MockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockData.swift; sourceTree = "<group>"; };
@@ -92,8 +94,9 @@
 		C64B7EDA2B795C66007BE551 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				C64B7EE02B795DC7007BE551 /* Components */,
 				C64B7EDB2B795C73007BE551 /* Home */,
+				C691DA472B8633200079867A /* Detail */,
+				C64B7EE02B795DC7007BE551 /* Components */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -102,7 +105,7 @@
 			isa = PBXGroup;
 			children = (
 				C64B7EDC2B795C80007BE551 /* Views */,
-				C69F661C2B7C019000B45FB6 /* View Models */,
+				C69F661C2B7C019000B45FB6 /* ViewModels */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -137,6 +140,30 @@
 			path = "Circle button";
 			sourceTree = "<group>";
 		};
+		C691DA472B8633200079867A /* Detail */ = {
+			isa = PBXGroup;
+			children = (
+				C691DA482B8633520079867A /* Views */,
+				C691DA492B86335F0079867A /* ViewModels */,
+			);
+			path = Detail;
+			sourceTree = "<group>";
+		};
+		C691DA482B8633520079867A /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				C691DA4A2B8633A20079867A /* DetailView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		C691DA492B86335F0079867A /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
 		C69F66172B7BF33100B45FB6 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -149,12 +176,12 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		C69F661C2B7C019000B45FB6 /* View Models */ = {
+		C69F661C2B7C019000B45FB6 /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
 				C6F0054C2B7CF0390068422D /* HomeViewModel.swift */,
 			);
-			path = "View Models";
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		C69F66212B7C12E000B45FB6 /* Utils */ = {
@@ -316,6 +343,7 @@
 				C62A97C42B82CC02001D340A /* StatisticRow.swift in Sources */,
 				C6F0054D2B7CF0390068422D /* HomeViewModel.swift in Sources */,
 				C6C6C41B2B77B1350024FF54 /* DataCryptoApp.swift in Sources */,
+				C691DA4B2B8633A20079867A /* DetailView.swift in Sources */,
 				C695765C2B8385730092B6AF /* MarketData.swift in Sources */,
 				C6D1C2602B80252900B67358 /* ImageCache.swift in Sources */,
 				C69F66202B7C0CFE00B45FB6 /* Double+Extension.swift in Sources */,
