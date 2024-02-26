@@ -92,18 +92,17 @@ extension HomeView {
             Text("Top 10")
                 .font(.caption)
                 .foregroundStyle(.dcSecondaryText)
-                .padding(.horizontal)
             
             VStack(alignment: .leading) {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 16) {
                         ForEach(homeViewModel.topCoins) { coin in
-                            TopCoinsRow(coin: coin )
+                            TopCoinsRow(coin: coin)
                         } // Loop
                     } // HStack
                 } // Scroll
-                .padding(.horizontal)
             } // VStack
+            .padding(.horizontal)
             .padding(.bottom, 16)
         }
     }
@@ -140,6 +139,7 @@ extension HomeView {
             } // HStack
             .onTapGesture {
                 homeViewModel.sortOption = homeViewModel.sortOption == .rank ? .rankReversed : .rank
+                onTapSortButton(sortOption:  homeViewModel.sortOption)
             }
             
             Spacer()
@@ -155,10 +155,7 @@ extension HomeView {
             .onTapGesture {
                 withAnimation(.default) {
                     homeViewModel.sortOption = homeViewModel.sortOption == .price ? .priceReverse : .price
-                    // esto es actualizando llamando al servidor
-//                    Task {
-//                        await homeViewModel.getAllCoins()
-//                    }
+                    onTapSortButton(sortOption:  homeViewModel.sortOption)
                 }
             } // Sort button
             
