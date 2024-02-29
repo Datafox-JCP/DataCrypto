@@ -47,10 +47,10 @@ final class CoinsWebService {
         do {
             let decoder = JSONDecoder()
             let receiveValue = try decoder.decode(GlobalData.self, from: data)
-//            let marketData = receiveValue.data!
-//            #if DEBUG
-//            print("👾 MarketValue value: \(marketData)")
-//            #endif
+            #if DEBUG
+            let marketData = receiveValue.data!
+            print("👾 MarketValue value: \(marketData)")
+            #endif
             return receiveValue.data!
         } catch {
             throw ErrorCases.invalidData

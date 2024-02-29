@@ -15,65 +15,30 @@ struct DetailView: View {
     let coin: Coin
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 24) {
-                CachedImage(
-                    url: coin.image,
-                    animation: .spring(duration: 2.0),
-                    transition: .move(edge: .top) .combined(with: .opacity)
-                ) { phase in
-                    switch phase {
-                    case .empty:
-                        ProgressView()
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .scaledToFill()
-                    case .failure(_):
-                        Image(systemName: "xmark")
-                            .symbolVariant(.circle.fill)
-                    @unknown default:
-                        EmptyView()
-                    } // Phase
-                } // Image
-                .frame(width: 150, height: 150)
-                
-                Text(detailViewModel.coinInfo?.name ?? "")
-                    .font(.largeTitle)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.accent)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal)
-                ZStack {
-//                    if let description = detailViewModel.coinInfo?.description?.en {
-//                        Text(description)
-//                    } // antes de quitar el HTML
-                    if let description = detailViewModel.coinInfo?.noHTMLdescription {
-                        VStack(alignment: .leading) {
-                            Text(description)
-                                .font(.callout)
-                                .foregroundStyle(.dcSecondaryText)
-                                .lineLimit(showFullDescription ? nil : 5)
-                            
-                            Button {
-                                withAnimation(.easeInOut) {
-                                    showFullDescription.toggle()
-                                }
-                            } label: {
-                                Text(showFullDescription ? "Menos" : "Leer más")
-                                    .font(.caption)
-                                    .fontWeight(.semibold)
-                                    .padding(.vertical, 4)
-                            }
-                            .tint(.blue)
-                        }
-                        .frame(maxWidth: .infinity, alignment: .leading)
+        ZStack {
+            Color.dcBackground
+                .ignoresSafeArea()
+            
+            ScrollView {
+                VStack {
+                    ChartView(coin: coin)
+                        .padding(.vertical)
+                    VStack(spacing: 20) {
+                        coinDescription
+                        Divider()
                     }
-                }
-                .padding(.horizontal)
-            } // VStack
-        } // Scroll
+                    .padding()
+                    
+                } // VStack
+            } // Scroll
+        } // ZStack
         .navigationTitle(detailViewModel.coinInfo?.name ?? "")
+        .navigationBarTitleDisplayMode(.large)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                navigationBarTrailingItems
+            } // Item
+        } // Toolbar
         .task {
             await detailViewModel.fetchDetails(for: coin.id)
         } // Load task
@@ -83,3 +48,60 @@ struct DetailView: View {
 //#Preview {
 //    DetailView(coin: MockData.coin)
 //}
+
+
+extension DetailView {
+    
+    private var navigationBarTrailingItems: some View {
+        HStack {
+            Text(detailViewModel.coinInfo?.symbol.uppercased() ?? "")
+                .font(.headline)
+                .foregroundStyle(.dcSecondaryText)
+            
+            CachedImage(
+                url: coin.image
+            ) { phase in
+                switch phase {
+                case .empty:
+                    ProgressView()
+                case .success(let image):
+                    image
+                        .resizable()
+                        .scaledToFill()
+                case .failure(_):
+                    Image(systemName: "xmark")
+                        .symbolVariant(.circle.fill)
+                @unknown default:
+                    EmptyView()
+                } // Phase
+            } // Image
+            .frame(width: 25, height: 25)
+        }
+    }
+    
+    private var coinDescription: some View {
+        ZStack {
+            if let description = detailViewModel.coinInfo?.noHTMLdescription {
+                VStack(alignment: .leading) {
+                    Text(description)
+                        .font(.callout)
+                        .lineLimit(showFullDescription ? nil : 5)
+                    
+                    Button {
+                        withAnimation(.easeInOut) {
+                            showFullDescription.toggle()
+                        }
+                    } label: {
+                        Text(showFullDescription ? "Menos" : "Leer más")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .padding(.vertical, 4)
+                    } // Description button
+                    .tint(.blue)
+                } // VStack
+                .frame(maxWidth: .infinity, alignment: .leading)
+            } // Condition
+        } // Zstack
+        .padding(.horizontal)
+    }
+}

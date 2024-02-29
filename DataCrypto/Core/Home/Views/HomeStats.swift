@@ -13,12 +13,7 @@ struct HomeStats: View {
     
     // MARK: View
     var body: some View {
-        VStack {
-            Text("Estadísticas")
-                .font(.caption)
-                .foregroundStyle(.dcSecondaryText)
-            
-            HStack {
+        VStack {HStack {
                 ForEach(homeViewModel.statistics) { stat in
                     StatisticRow(stat: stat)
                         .frame(width: width / 3)

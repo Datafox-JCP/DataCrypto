@@ -52,11 +52,6 @@ extension CoinRow {
     // MARK: - Left column
     private var leftColumn: some View {
         HStack(spacing: 0) {
-            Text("\(coin.marketCapRank)")
-                .padding(.trailing, 8)
-                .font(.caption)
-                .foregroundStyle(.accent)
-
             CachedImage(
                 url: coin.image,
                 animation: .easeIn(duration: 0.5),
@@ -79,15 +74,17 @@ extension CoinRow {
             .frame(width: 32, height: 32)
                 
                 VStack(alignment: .leading) {
-                    Text(coin.symbol.uppercased())
+                    Text(coin.name.uppercased())
                         .font(.headline)
-                        .padding(.leading, 8)
                         .foregroundStyle(.accent)
                     
-                    Text(coin.name.uppercased())
-                        .font(.caption)
-                        .padding(.leading, 8)
-                        .foregroundStyle(.dcSecondaryText)
+                    HStack {
+                        Text("\(coin.marketCapRank)")
+                        
+                        Text(coin.symbol.uppercased())
+                    }
+                    .font(.caption)
+                    .foregroundStyle(.dcSecondaryText)
                 } // VStack
                 .padding(.leading, 8)
         } // HStack
@@ -116,6 +113,7 @@ extension CoinRow {
             Text(coin.priceChangePercentage24H?.asPercentString() ?? "")
                 .font(.caption)
                 .foregroundStyle((coin.priceChangePercentage24H ?? 0) >= 0 ? .dcGreen : .dcRed)
+                .padding(.horizontal, 2)
         } // VStack
         .frame(width: width / 3.5, alignment: .trailing)
     }
